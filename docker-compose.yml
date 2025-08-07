@@ -13,7 +13,7 @@ services:
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - backend
-
+    
   app:
     build: ./app
     container_name: app
@@ -27,16 +27,12 @@ services:
       POSTGRES_HOST: db
     labels:
       - "traefik.enable=true"
-      #- "traefik.http.routers.app.rule=Host(`localhost`)"
-      - "traefik.http.routers.app.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.app.entrypoints=web"
-      - "traefik.http.services.app.loadbalancer.server.port=5000"
-      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.todo.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.todo.entrypoints=web"
+      - "traefik.http.services.todo.loadbalancer.server.port=5000"
     networks:
       - backend
       - traefik
-   # ports:
-   #   - "5000:5000"
 
 
   traefik:
@@ -54,6 +50,7 @@ services:
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
     networks:
       - traefik
+
 
   prometheus:
     image: prom/prometheus
